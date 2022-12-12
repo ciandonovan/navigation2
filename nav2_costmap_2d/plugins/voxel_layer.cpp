@@ -64,6 +64,7 @@ void VoxelLayer::onInitialize()
 
   declareParameter("enabled", rclcpp::ParameterValue(true));
   declareParameter("footprint_clearing_enabled", rclcpp::ParameterValue(true));
+  declareParameter("min_mark_height", rclcpp::ParameterValue(0.0));
   declareParameter("max_obstacle_height", rclcpp::ParameterValue(2.0));
   declareParameter("z_voxels", rclcpp::ParameterValue(10));
   declareParameter("origin_z", rclcpp::ParameterValue(0.0));
@@ -80,6 +81,7 @@ void VoxelLayer::onInitialize()
 
   node->get_parameter(name_ + "." + "enabled", enabled_);
   node->get_parameter(name_ + "." + "footprint_clearing_enabled", footprint_clearing_enabled_);
+  node->get_parameter(name_ + "." + "min_mark_height", min_mark_height_);
   node->get_parameter(name_ + "." + "max_obstacle_height", max_obstacle_height_);
   node->get_parameter(name_ + "." + "z_voxels", size_z_);
   node->get_parameter(name_ + "." + "origin_z", origin_z_);
@@ -210,6 +212,10 @@ void VoxelLayer::updateBounds(
 
       // now we need to compute the map coordinates for the observation
       unsigned int mx, my, mz;
+      if (*iter_z < min_mark_height_)
+      {
+        continue;
+      }
       if (*iter_z < origin_z_) {
         if (!worldToMap3D(*iter_x, *iter_y, origin_z_, mx, my, mz)) {
           continue;
