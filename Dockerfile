@@ -6,7 +6,7 @@
 # docker build -t nav2:latest \
 #   --build-arg UNDERLAY_MIXINS \
 #   --build-arg OVERLAY_MIXINS ./
-ARG FROM_IMAGE=ros:rolling
+ARG FROM_IMAGE=ros:humble
 ARG UNDERLAY_WS=/opt/underlay_ws
 ARG OVERLAY_WS=/opt/overlay_ws
 
@@ -110,7 +110,7 @@ FROM builder AS tester
 
 # build overlay source
 COPY --from=cacher $OVERLAY_WS ./
-ARG OVERLAY_MIXINS="release ccache lld"
+ARG OVERLAY_MIXINS="ccache lld"
 ARG CCACHE_DIR="$OVERLAY_WS/.ccache"
 RUN . $UNDERLAY_WS/install/setup.sh && \
     colcon cache lock && \
